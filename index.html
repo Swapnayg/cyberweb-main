@@ -694,7 +694,7 @@
 
     <script>
         const Pi = window.Pi;
-        Pi.init({ version: "2.0", sandbox:false });
+        Pi.init({ version: "2.0", sandbox:true });
         async function auth() {
           try {
               
@@ -707,6 +707,7 @@
                   var username = auth.user.username;
                   var password = auth.user.uid;
                   var auth_token = auth.accessToken;
+                  console.log(auth_token);
                       
                 });
             
@@ -721,7 +722,6 @@
         
         // Must be triggered some kind of "user activation"
         btn.addEventListener('click', async () => {
-            alert("button 2");
             console.log("fired");
             if (!navigator.share) {
                 Pi.openShareDialog(shareData.title, shareData.text);
@@ -737,7 +737,6 @@
         });
         $('#button1').click(function (e) {
           e.preventDefault();
-          alert("button 1");
           console.log("12");
           if (!navigator.share) {
             Pi.openShareDialog(shareData.title, shareData.text);
