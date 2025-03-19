@@ -7,15 +7,6 @@
     <meta name="robots" content="noindex,nofollow">
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
     <title>Tiranga</title>
-    <link rel="stylesheet" href="./index_files/index-96409872.css">
-    <link href="/css/promotion/app.css" rel="stylesheet" />
-    <link href="/css/promotion/chunk-0_1.css" rel="stylesheet" />
-    <link href="/css/promotion/chunk-0_2.css" rel="stylesheet" />
-    <link href="/css/promotion/chunk-0_3.css" rel="stylesheet" />
-    <link href="/css/promotion/chunk-0_4.css" rel="stylesheet" />
-    <link href="/css/promotion/chunk-0_5.css" rel="stylesheet" />
-    <link href="/css/promotion/chunk-0_6.css" rel="stylesheet" />
-    <link rel="shortcut icon" href="/images/bitbug_favicon.ico" type="image/x-icon">
 
     <style>
       #button1
@@ -588,6 +579,8 @@
                                 </div>
                             </div>
 
+                            <button id="button2" class="btn btn-success" >Share</button>
+
                             <div data-v-932703ba="" class="promote__cell">
                                 <div data-v-932703ba="" class="promote__cell-item" onclick="location.href='/promotion/bonusrecord'">
                                   <div data-v-932703ba="" class="label">
@@ -693,17 +686,15 @@
                 </div>
             </div>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-            <script src="/js/client.js"></script>
         <script src="https://sdk.minepi.com/pi-sdk.js"></script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="https://momentjs.com/downloads/moment.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
-            <script src="/js/qr.js"></script>
-            <script src="/js/client.js"></script>
+
 
     <script>
         const Pi = window.Pi;
-        Pi.init({ version: "2.0", sandbox: <%=sandbox%> });
+        Pi.init({ version: "2.0", sandbox:'false' });
         async function auth() {
           try {
               
@@ -877,8 +868,27 @@
         }
         }
         auth();
+        const btn = document.querySelector('#button2');
+        //const resultPara = document.querySelector('.result');
+        
+        // Must be triggered some kind of "user activation"
+        btn.addEventListener('click', async () => {
+            console.log("fired");
+            if (!navigator.share) {
+                Pi.openShareDialog(shareData.title, shareData.text);
+            }else
+            {
+              try {
+                await navigator.share(shareData);
+                //resultPara.textContent = 'MDN shared successfully'
+              } catch(err) {
+                //alert('Error: ' + err);
+              }
+            }
+        });
         $('#button1').click(function (e) {
           e.preventDefault();
+          console.log("12");
           if (!navigator.share) {
             Pi.openShareDialog(shareData.title, shareData.text);
         }else
