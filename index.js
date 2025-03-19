@@ -3,7 +3,6 @@ const { json } = require('body-parser');
 const express = require('express');
 const http = require('http');
 const socket = require('socket.io');
-var admin = require("firebase-admin");
 const axios = require("axios")
 
 const CURRENT_VERSION = 1;
@@ -11,7 +10,7 @@ const CURRENT_VERSION = 1;
 const piNetworkApi = 'socialchain.app/v2'
 const API_KEY = 'fcjov0futkp7yxayr4sxnjx98onwziwurrczmz8qmotpxibaw55ct2kn9mt9sxth'
 
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 3005
 
 var app = express();
 const server = http.createServer(app)
@@ -19,11 +18,11 @@ const io = socket(server)
 var players;
 var joined = true;
 
+
 app.use(express.json());
 app.use(express.static(__dirname + "/"));
 
-const database = admin.database();
-const usersRef = database.ref('/users');
+// const usersRef = database.ref('/users');
 var games = Array(100);
 for (let i = 0; i < 100; i++) {
     games[i] = {players: 0 , pid: [0 , 0]};
