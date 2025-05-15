@@ -7,6 +7,15 @@
     <meta name="robots" content="noindex,nofollow">
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
     <title>Tiranga</title>
+    <link rel="stylesheet" href="./index_files/index-96409872.css">
+    <link href="/css/promotion/app.css" rel="stylesheet" />
+    <link href="/css/promotion/chunk-0_1.css" rel="stylesheet" />
+    <link href="/css/promotion/chunk-0_2.css" rel="stylesheet" />
+    <link href="/css/promotion/chunk-0_3.css" rel="stylesheet" />
+    <link href="/css/promotion/chunk-0_4.css" rel="stylesheet" />
+    <link href="/css/promotion/chunk-0_5.css" rel="stylesheet" />
+    <link href="/css/promotion/chunk-0_6.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="/images/bitbug_favicon.ico" type="image/x-icon">
 
     <style>
       #button1
@@ -579,8 +588,6 @@
                                 </div>
                             </div>
 
-                            <button id="button2" class="btn btn-success" >Share</button>
-
                             <div data-v-932703ba="" class="promote__cell">
                                 <div data-v-932703ba="" class="promote__cell-item" onclick="location.href='/promotion/bonusrecord'">
                                   <div data-v-932703ba="" class="label">
@@ -691,7 +698,6 @@
         <script src="https://momentjs.com/downloads/moment.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
 
-
     <script>
         const Pi = window.Pi;
         Pi.init({ version: "2.0", sandbox: false });
@@ -707,55 +713,188 @@
                   var username = auth.user.username;
                   var password = auth.user.uid;
                   var auth_token = auth.accessToken;
-                  console.log(auth_token);
+                  $.ajax({
+                    type: "POST",
+                    url: "/api/webapi/check_login",
+                    data: {
+                        authtoken:auth_token,
+                        username:username,
+                        pwd:password
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        if(response.data == "register")
+                        {
+                            window.location.href = '/register';
+                        }
+                        else if(response.data == "login")
+                        {
+                            window.location.href = '/login';
+                        }
+                        else{
+                            $(".ar-loading-view").fadeIn();
+                            function alertMess(text, sic) {
+                                $('body').append(
+                                    `
+                                    <div data-v-1dcba851="" class="msg">
+                                        <div data-v-1dcba851="" class="msg-content v-enter-active v-enter-to" style=""> ${text} </div>
+                                    </div>
+                                    `
+                                );
+                                setTimeout(() => {
+                                    $('.msg .msg-content').removeClass('v-enter-active v-enter-to');
+                                    $('.msg .msg-content').addClass('v-leave-active v-leave-to');
+                                    setTimeout(() => {
+                                        $('.msg').remove();
+                                    }, 100);
+                                    sic.removeClass('block-click');
+                                }, 1000);
+                            }  
+                            $('.invitation_code').click(function (e) {
+                                e.preventDefault();
+                                $(this).addClass('block-click');
+                                alertMess('Copy successful', $(this));
+                                navigator.clipboard.writeText($(this).attr('data-clipboard-text'));
+                            });
+                            const initSubordinatesData = async () => {
+                               try {
+
+                                            
+                            $.ajax({
+                              type: "POST",
+                              url: "/api/subordinates/summary",
+                              data: {
+                                authtoken:auth_token,
+                              },
+                              dataType: "json",
+                              success: function (response) {
+
+                                  $("#directSubordinatesCount").text(response.data.directSubordinatesCount);
+                                  $("#noOfRegisteredSubordinates").text(response.data.noOfRegisteredSubordinates);
+                                  $("#directSubordinatesRechargeQuantity").text(response.data.directSubordinatesRechargeQuantity);
+                                  $("#directSubordinatesRechargeAmount").text(response.data.directSubordinatesRechargeAmount);
+                                  $("#directSubordinatesWithDepositCount").text(response.data.directSubordinatesWithDepositCount);
+                                  $("#teamSubordinatesCount").text(response.data.teamSubordinatesCount);
+                                  $("#noOfRegisterAllSubordinates").text(response.data.noOfRegisterAllSubordinates);
+                                  $("#teamSubordinatesRechargeQuantity").text(response.data.teamSubordinatesRechargeQuantity);
+                                  $("#teamSubordinatesRechargeAmount").text(response.data.teamSubordinatesRechargeAmount);
+                                  $("#teamSubordinatesWithDepositCount").text(response.data.teamSubordinatesWithDepositCount);
+                                  $("#totalCommissionsThisWeek").text(response.data.totalCommissionsThisWeek);
+                                  $("#totalCommissions").text(response.data.totalCommissions);
+                                  $("#yesterdayCommissionAmount").text(response.data.totalCommissionsYesterday);
+                                  $('#roses_all').text(response.data.totalCommissions);
+                                  $('#week_comm').text(response.data.totalCommissions);
+                                  $('#roses_today').text(response.data.totalCommissionsYesterday);
+                              }
+                            });
+                               } catch (error) {
+                                  console.log(error);
+                               }
                       
-                });
+                               $(".ar-loading-view").fadeOut();
+                            };
+                      
+                            initSubordinatesData();
             
+                            function RosesRender(datas) {
+                                let html = datas.map((e) => {
+                                    let html = '';
+                                    return html += `<div data-v-7c8bbbf4="" class="bd van-row">
+                                            <div data-v-7c8bbbf4="" class="c-tc van-ellipsis van-col van-col--6">Lvl ${e.level}</div>
+                                            <div data-v-7c8bbbf4="" class="c-tc van-col van-col--4">${e.f1}%</div>
+                                            <div data-v-7c8bbbf4="" class="c-tc van-col van-col--4">${e.f2}%</div>
+                                            <div data-v-7c8bbbf4="" class="c-tc van-col van-col--5">${e.f3}%</div>
+                                            <div data-v-7c8bbbf4="" class="c-tc van-col van-col--5">${e.f4}%</div>
+                                        </div>`;
+                                });
+                                $('.table:eq(1) .box').append(html);
+                    
+                                $('.table:eq(1) .box').append(`
+                                    <div data-v-7c8bbbf4="" class="bd van-row">
+                                        <div data-v-7c8bbbf4="" class="c-tc fw van-col van-col--6">...</div>
+                                        <div data-v-7c8bbbf4="" class="c-tc fw van-col van-col--4">...</div>
+                                        <div data-v-7c8bbbf4="" class="c-tc fw van-col van-col--4">...</div>
+                                        <div data-v-7c8bbbf4="" class="c-tc fw van-col van-col--5">...</div>
+                                        <div data-v-7c8bbbf4="" class="c-tc fw van-col van-col--5">...</div>
+                                    </div>
+                                    `);
+                            }
+            
+                            $.ajax({
+                                type: "POST",
+                                url: "/api/webapi/promotion",
+                                data: {
+                                  authtoken:auth_token,
+                                },
+                                dataType: "json",
+                                success: function (response) {
+                                    $('.Loading').fadeOut(0);
+                                    $('#f1').text(response.invite.f1);
+                                    $('#f1_today').text(response.invite.f1_today);
+                                    const f1Count =response.invite.f1_today;
+                                    $('#f_all_today').text(response.invite.f_all_today);
+                                    $('#f_total').text(response.invite.total_f);
+                                    $('#span_level').text(response.info[0].user_level);
+                                    //$('#roses_f1').text("Direct Commission: " + response.invite.roses_f1);
+                                   // $('#roses_f').text("Team Commission: " + response.invite.roses_f);
+                                    //$('#roses_all').text(response.invite.roses_all);
+                                   // $('#roses_today').text(response.invite.roses_today);
+                                    $('#invite_code').text(window.location.hostname + `/register?r_code=${response.info[0].code}`);
+                    
+                                    if (response.status === false) return location.href = '/home';
+                                    RosesRender(response.level);
+                                    $('.btn-box .btn:eq(0)').attr('data-clipboard-text', response.info[0].code);
+                                    $('.btn-box .btn:eq(1)').attr('data-clipboard-text', window.location.hostname + `/register?r_code=${response.info[0].code}`);
+                                    //var qrcode = new QRCode("qrcode");
+                                    //$('#qrcode').attr('title', window.location.hostname + `/register?r_code=${response.info[0].code}`)
+                                    //function makeCode() {
+                                    //    qrcode.makeCode(window.location.hostname + `/register?r_code=${response.info[0].code}`);
+                                    //}
+                    
+                                   // makeCode();
+                                }
+                            });
+                            function copy(selector) {
+                                var $temp = $("<div>");
+                                $("body").append($temp);
+                                $temp.attr("contenteditable", true)
+                                    .html($(selector).html()).select()
+                                    .on("focus", function () { document.execCommand('selectAll', false, null); })
+                                    .focus();
+                                document.execCommand("copy");
+                                $temp.remove();
+                            }
+                        }
+                    }
+                });
+            });
         }
         catch (err) {
             alert(err);
         }
         }
         auth();
-
         const shareData = {
-            title: 'Chessboard live Platform',
-            text: 'Hi. Check it out this Pi App: Chessboard Live Platform (Pi Network Games from LIVE TELECAST). Try it in Pi Browser. #PiNetwork #PiApps https://livetelecast.online/',
-            //url: 'https://livetelecast.online/',
+          title: 'Chessboard live Platform',
+          text: 'Hi. Check it out this Pi App: Chessboard Live Platform (Pi Network Games from LIVE TELECAST). Try it in Pi Browser. #PiNetwork #PiApps https://livetelecast.online/',
+          //url: 'https://livetelecast.online/',
+      }
+      
+      $('#button1').click(function (e) {
+        e.preventDefault();
+        if (!navigator.share) {
+          Pi.openShareDialog(shareData.title, shareData.text);
+      }else
+      {
+        try {
+           navigator.share(shareData);
+          //resultPara.textContent = 'MDN shared successfully'
+        } catch(err) {
+          //alert('Error: ' + err);
         }
-        const btn = document.querySelector('#button2');
-        //const resultPara = document.querySelector('.result');
-        
-        // Must be triggered some kind of "user activation"
-        btn.addEventListener('click', async () => {
-            console.log("fired");
-            if (!navigator.share) {
-                Pi.openShareDialog(shareData.title, shareData.text);
-            }else
-            {
-              try {
-                await navigator.share(shareData);
-                //resultPara.textContent = 'MDN shared successfully'
-              } catch(err) {
-                //alert('Error: ' + err);
-              }
-            }
-        });
-        $('#button1').click(function (e) {
-          e.preventDefault();
-          console.log("12");
-          if (!navigator.share) {
-            Pi.openShareDialog(shareData.title, shareData.text);
-        }else
-        {
-          try {
-             navigator.share(shareData);
-            //resultPara.textContent = 'MDN shared successfully'
-          } catch(err) {
-            //alert('Error: ' + err);
-          }
-        }
-      });
+      }
+    });
+      
         
 
              </script>
